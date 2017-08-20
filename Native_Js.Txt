@@ -1,0 +1,54 @@
+1、判断数组里面是否存在指定字符串对象
+	Array.prototype.S=String.fromCharCode(2);
+	Array.prototype.in_array=function(e){
+		var r=new RegExp(this.S+e+this.S);
+		return (r.test(this.S+this.join(this.S)+this.S));
+	};
+	var arr = [ "xml", "html", "css", "js" ];
+	arr.in_array("js"); //存在返回true
+
+2、判断对象是否是数组：
+	Object.prototype.toString.call($scope.detailData.applyDetail.key) == '[object Array]';
+	arr.splice(1,1);	//splice参数中第一个1,是删除的起始索引(从0算起),在此是数组第二个元素
+	arr.splice(1,1,'d','e');	//d,e两个元素就被加入数组arr了,变成arr:'a','d','e','c'　
+	delete arr[1];		//数组长度不变,此时arr[1]变为undefined了
+	Array.prototype.del=function(n) {//n表示第几项，从0开始算起。
+	　if(n<0)
+	　　return this;
+	　else
+	　　return this.slice(0,n).concat(this.slice(n+1,this.length));
+	}
+	/*
+	 prototype为对象原型，注意这里为对象增加自定义方法的方法。
+　　　concat方法：返回一个新数组，这个新数组是由两个或更多数组组合而成的。
+　　　　　　　　　这里就是返回this.slice(0,n)/this.slice(n+1,this.length)
+　　 　　　　　　组成的新数组，这中间，刚好少了第n项。
+　　　slice方法： 返回一个数组的一段，两个参数，分别指定开始和结束的位置。
+	*/
+	var test=new Array(0,1,2,3,4,5);
+	test=test.del(3);　//从0算起，这里也就是删除第4项。
+
+3、判断数组里面是否有重复元素
+	var isRepeat = function(arr) {
+		var hash = {};
+		for ( var i in arr) {
+			if (hash[arr[i]])
+				return true;
+			hash[arr[i]] = true;
+		}
+		return false;
+	} 
+
+4、把字符串字分割成数组:
+	str.split(";");          
+	arr.join(",");//把数组用‘,’拼接成字符串
+
+5、删除对象obj里面的name属性/字段：
+	delete obj.name
+	Object.getOwnPropertyNames(obj).length //JS获取对象属性/元素的个数
+
+6、判断获取Http或Https协议
+	var _bdhmProtocol = (("https:" == document.location.protocol)? " https://" : " http://");
+
+7、parseInt("12.3",10)的解释：
+	parseInt(String s,int radix)就是求“int radix”进制数“String s”的十进制数是多少

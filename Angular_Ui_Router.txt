@@ -1,0 +1,72 @@
+1、基本使用：
+    angular.module('dnsPage', ['ui.router','sfService'])
+    .config(function ($stateProvider, $urlRouterProvider,vishnuProvider) {
+        $stateProvider
+            .state("dns.insideDNS", {//嵌套路由，路由里面有ui-view
+            url: "/insideDNS?url&ctrl",//参数传递，一个参数可以'/:url'
+            templateUrl:function ($stateParams) {
+            return vishnuProvider.rootPath+$stateParams.url+".html";
+            },
+            controllerProvider: function($stateParams) {
+            return $stateParams.ctrl;
+            }
+            });
+            .state("dns.withoutDNS",{
+            url:"/withoutDNS?url&ctrl",
+            views:{
+            '':{//ui-view：一个页面多个路由
+                templateUrl:function($stateParams) {
+                    console.log($stateParams);
+                    return vishnuProvider.rootPath+"/html/withoutDNS.html";
+                },
+            },
+            'content':{//ui-view="content"
+                templateUrl:function($stateParams) {
+                    console.log($stateParams);
+                    return vishnuProvider.rootPath+"/html/withoutDNS.html";
+                },
+            },
+            }
+        });
+    $urlRouterProvider.otherwise("/insideDNS");
+    })
+
+    //界面使用
+    <div>
+        <a class="choiceicon" ui-sref=".insideDNS({url:'/html/insideDNS',ctrl:'insideDnsController'})"  ui-sref-active="on" >
+            <i class="fa fa-dot-circle-o"></i>内网解析</a>
+        <a class="choiceicon" ui-sref=".insideDNS({url:'/html/outsideDNS',ctrl:'outsideDnsController'})" ui-sref-active="on">
+            <i class="fa fa-circle-thin"></i>互联网解析</a>
+    </div>
+
+    //JS控制路由跳转，注入$state
+    $state.go('dns.insideDNS',{url:'/html/insideDNS',ctrl:'insideDnsController'});
+
+2、常用参数：
+    $state.go('photos.detail')
+    $state.go('^')到上一级,比如从photo.detail到photo
+    $state.go('^.list')到相邻state,比如从photo.detail到photo.list
+    $state.go('^.detail.comment')到孙子级state，比如从photo.detail到photo.detial.comment
+
+3、事件监听：
+    $rootScope.$on('$stateChangeStart', 
+        function(event, toState, toParams, fromState, fromParams){
+        if(toState.data.required && !$rootScope.user){
+        event.preventDefault();
+        $state.go('content.login');
+        return;
+        } 
+    });
+    $rootScope.$on('$stateNotFound', 
+        function(event, unfoundState, fromState, fromParams){
+        event.preventDefault();
+        $state.go('content.notfound');
+    });
+    $rootScope.$on('$stateChangeSuccess', 
+        function(event, toState, toParams, fromState, fromParams){
+        $rootScope.accessLog.push({
+        user: $rootScope.user,
+        from: fromState.name,
+        to: toState.name,
+        date: new Date()
+    });

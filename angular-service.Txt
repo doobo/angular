@@ -1,0 +1,43 @@
+angular.module('public',[])
+    .value('apiKey','546213452')
+    .constant('uuid',{id:'UID-4521-7856-751'})
+    .provider('proService',{
+        $get:function () {
+            return {sayTime:new Date()}
+        }
+    })
+    .provider('proService2',function () {
+        this.gitUrl = 'https://github.com';
+        this.$get = function () {
+            return this.gitUrl;
+        }
+    })
+    .factory('facService',function () {
+        return{
+            param:'param',
+            getParam:function () {
+                return 'getParam';
+            }
+        }
+    })
+    .service('sService',function () {
+        this.time = new Date();
+        this.service = "Service";
+    })
+    .config(function (proService2Provider,uuid) {//注入的user的服务名字'user'+'Provider'
+
+        uuid.id = "UID-7894-4563-1230";
+        uuid['time'] = new Date();
+        proService2Provider.gitUrl = "www.google.com";
+        console.log(uuid);
+    })
+    .run(function (uuid,apiKey) {
+        console.info(uuid.id,apiKey);
+    })
+    .controller('myPublic',function ($scope,apiKey,uuid
+        ,proService2,proService,facService,sService) {
+        $scope.h1 = {one:'Angular常用服务示例'};
+        console.info(apiKey,uuid,proService2
+            ,proService,facService,facService.getParam()
+            ,sService,sService.time);
+    })
